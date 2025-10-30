@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KTP Digital Interaktif</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .form-container {
+      margin-bottom: 30px;
+      width: 100%;
+      max-width: 400px;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .form-container label {
+      display: block;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .form-container input, 
+    .form-container select {
+      margin-top: 5px;
+      padding: 8px;
+      font-size: 14px;
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .form-container button {
+      margin-top: 20px;
+      padding: 10px 15px;
+      font-size: 14px;
+      cursor: pointer;
+      background-color: #1a3e6f;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      width: 100%;
+    }
+
+    .form-container button:hover {
+      background-color: #0d2b4e;
+    }
+
+    .ktp-container {
+      width: 480px;
+      height: auto;
+      background: linear-gradient(to right, #d4e6f7, #e6f0fa);
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      padding: 20px;
+      position: relative;
+      border: 1px solid #a8c5e0;
+      margin-top: 20px;
+    }
+
+    .ktp-header {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .provinsi, .kabupaten {
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      color: #1a3e6f;
+    }
+
+    .kabupaten {
+      margin-top: 2px;
+    }
+
+    .ktp-photo-placeholder {
+      position: absolute;
+      right: 15px;
+      top: 70px;
+      width: 80px;
+      height: 100px;
+      background-color: #c8d9eb;
+      border: 1px solid #7a9cc6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 10px;
+      color: #3a5a7a;
+    }
+
+    .ktp-content {
+      font-size: 10px;
+      line-height: 1.4;
+      color: #1a3e6f;
+      margin-bottom: 5px;
+    }
+
+    .ktp-row {
+      display: flex;
+      margin-bottom: 2px;
+    }
+
+    .ktp-label {
+      width: 120px;
+      font-weight: bold;
+    }
+
+    .alamat {
+        width: 100px;
+    }
+
+    .ktp-value {
+      flex: 1;
+    }
+
+    .indented-row {
+      display: flex;
+      margin-bottom: 2px;
+      margin-left: 20px; 
+    }
+
+    .nik {
+      font-size: 14px;
+      font-weight: bold;
+      letter-spacing: 3px;
+      margin-bottom: 5px;
+      color: #1a3e6f;
+    }
+
+    .footer {
+      position: absolute;
+      bottom:60px;
+      right: 20px;
+      text-align: center;
+      font-size: 10px;
+      color: #1a3e6f;
+    }
+    
+    .photo-preview {
+      width: 80px;
+      height: 100px;
+      object-fit: cover;
+    }
+
+    .row-with-gap {
+      display: flex;
+      gap: 10px;
+    }
+
+    .row-with-gap > 
+    div {
+      flex: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2 style="text-align: center; color: #1a3e6f;">Form Data KTP</h2>
+    
+    <label>Nama: <input type="text" id="nama" placeholder="Masukkan nama lengkap"></label>
+    <label>NIK: <input type="text" id="nik" placeholder="16 digit angka" maxlength="16"></label>
+    
+    <div style="display: flex; gap: 10px;">
+      <div style="flex: 1;">
+        <label>Tempat Lahir: <input type="text" id="tempatLahir" placeholder="Kota kelahiran"></label>
+      </div>
+      <div style="flex: 1;">
+        <label>Tanggal Lahir: <input type="date" id="tanggalLahir"></label>
+      </div>
+    </div>
+    
+    <div class="row-with-gap">
+      <div>
+        <label>Jenis Kelamin: 
+          <select id="jenisKelamin">
+            <option value="">Pilih Jenis Kelamin</option>
+            <option value="LAKI-LAKI">Laki-Laki</option>
+            <option value="PEREMPUAN">Perempuan</option>
+          </select>
+        </label>
+      </div>
+      <div>
+        <label>Gol. Darah: 
+          <select id="golonganDarah">
+            <option value="">Pilih</option>
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="AB">AB</option>
+            <option value="O">O</option>
+          </select>
+        </label>
+      </div>
+    </div>
+    
+    <label>Alamat: <input type="text" id="alamat" placeholder="Masukkan alamat lengkap"></label>
+    
+    <div style="display: flex; gap: 10px;">
+      <div style="flex: 1;">
+        <label>RT: <input type="text" id="rt" placeholder="3 digit" maxlength="3"></label>
+      </div>
+      <div style="flex: 1;">
+        <label>RW: <input type="text" id="rw" placeholder="3 digit" maxlength="3"></label>
+      </div>
+    </div>
+    
+    <label>Kel/Desa: <input type="text" id="desa" placeholder="Nama kelurahan/desa"></label>
+    <label>Kecamatan: <input type="text" id="kecamatan" placeholder="Nama kecamatan"></label>
+    
+    <label>Agama: 
+      <select id="agama">
+        <option value="">Pilih Agama</option>
+        <option value="ISLAM">Islam</option>
+        <option value="KRISTEN">Kristen</option>
+        <option value="KATOLIK">Katolik</option>
+        <option value="HINDU">Hindu</option>
+        <option value="BUDDHA">Buddha</option>
+        <option value="KONGHUCU">Konghucu</option>
+      </select>
+    </label>
+    
+    <label>Status Perkawinan: 
+      <select id="status">
+        <option value="">Pilih Status</option>
+        <option value="BELUM KAWIN">Belum Kawin</option>
+        <option value="KAWIN">Kawin</option>
+        <option value="CERAI HIDUP">Cerai Hidup</option>
+        <option value="CERAI MATI">Cerai Mati</option>
+      </select>
+    </label>
+    
+    <label>Pekerjaan: <input type="text" id="pekerjaan" placeholder="Pekerjaan saat ini"></label>
+    
+    <label>Kewarganegaraan: 
+      <select id="kwn">
+        <option value="WNI">WNI</option>
+        <option value="WNA">WNA</option>
+      </select>
+    </label>
+    
+    <label>Berlaku Hingga: 
+      <select id="berlaku">
+        <option value="SEUMUR HIDUP">Seumur Hidup</option>
+        <option value="5 TAHUN">5 Tahun</option>
+        <option value="10 TAHUN">10 Tahun</option>
+      </select>
+    </label>
+    
+    <label>Kota/Kabupaten: <input type="text" id="kota" placeholder="Nama kota/kabupaten"></label>
+    
+    <label>Foto: 
+      <input type="file" id="fotoInput" accept="image/*">
+    </label>
+    
+    <label>Tanggal Cetak: <input type="date" id="tanggalCetak"></label>
+
+    <button onclick="cetakKTP()">Cetak KTP</button>
+    <button onclick="resetForm()" style="margin-top: 10px; background-color: #6c757d;">Reset Form</button>
+  </div>
+
+  <div class="ktp-container">
+    <div class="ktp-header">
+      <div class="provinsi">PROVINSI JAWA BARAT</div>
+      <div class="kabupaten">KABUPATEN <span id="outKota">PURWAKARTA</span></div>
+    </div>
+    
+    <div class="nik">NIK : <span id="outNik">321431407050003</span></div>
+
+    <div class="ktp-content">
+      <div class="ktp-row">
+        <div class="ktp-label">Nama</div>
+        <div class="ktp-value" id="outNama">:</div>
+      </div>
+      <div class="ktp-row">
+        <div class="ktp-label">Tempat/Tgl Lahir</div>
+        <div class="ktp-value" id="outTTL">:</div>
+      </div>
+      <div class="ktp-row">
+        <div class="ktp-label">Jenis Kelamin</div>
+        <div class="ktp-value" id="outJK">:</div>
+        <div class="ktp-label" style="width:60px;margin-left:10px;">Gol. Darah</div>
+        <div class="ktp-value" id="outGolDarah">:</div>
+      </div>
+      <div class="ktp-row">
+        <div class="ktp-label">Alamat</div>
+        <div class="ktp-value" id="outAlamat">:</div>
+      </div>
+      <div class="indented-row">
+        <div class="ktp-label alamat">RT/RW</div>
+        <div class="ktp-value" id="outRTRW">:</div>
+      </div>
+      <div class="indented-row">
+        <div class="ktp-label alamat">Kel/Desa</div>
+        <div class="ktp-value" id="outDesa">:</div>
+      </div>
+      <div class="indented-row">
+        <div class="ktp-label alamat">Kecamatan</div>
+        <div class="ktp-value" id="outKecamatan">:</div>
+      </div>
+      <div class="ktp-row">
+        <div class="ktp-label">Agama</div>
+        <div class="ktp-value" id="outAgama">:</div>
+      </div>
+      <div class="ktp-row">
+        <div class="ktp-label">Status Perkawinan</div>
+        <div class="ktp-value" id="outStatus">:</div>
+      </div>
+      <div class="ktp-row">
+        <div class="ktp-label">Pekerjaan</div>
+        <div class="ktp-value" id="outPekerjaan">:</div>
+      </div>
+      <div class="ktp-row">
+        <div class="ktp-label">Kewarganegaraan</div>
+        <div class="ktp-value" id="outKwn">:</div>
+      </div>
+      <div class="ktp-row">
+        <div class="ktp-label">Berlaku Hingga</div>
+        <div class="ktp-value" id="outBerlaku">:</div>
+      </div>
+    </div>
+
+    <div class="ktp-photo-placeholder">
+      <img id="photoPreview" class="photo-preview" style="display: none;">
+      <span id="photoPlaceholderText">FOTO</span>
+    </div>
+
+    <div class="footer">
+      <span id="outKotaFooter">PURWAKARTA</span><br>
+      <span id="outTanggal">22-11-2022</span>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('nik').addEventListener('input', function() {
+      this.value = this.value.replace(/\D/g, '');
+    });
+
+    document.getElementById('rt').addEventListener('input', function() {
+      this.value = this.value.replace(/\D/g, '');
+    });
+    
+    document.getElementById('rw').addEventListener('input', function() {
+      this.value = this.value.replace(/\D/g, '');
+    });
+
+    document.getElementById('fotoInput').addEventListener('change', function(e) {
+      var file = e.target.files[0];
+      if (file) {
+        var reader = new FileReader();
+        reader.onload = function(event) {
+          var preview = document.getElementById('photoPreview');
+          preview.src = event.target.result;
+          preview.style.display = 'block';
+          document.getElementById('photoPlaceholderText').style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+    
+    function formatDate(date) {
+      if (!date) return '';
+      
+      var d = new Date(date);
+      var day = String(d.getDate()).padStart(2, '0');
+      var month = String(d.getMonth() + 1).padStart(2, '0');
+      var year = d.getFullYear();
+      
+      return ${day}-${month}-${year};
+    }
+    
+    function resetForm() {
+      document.getElementById('nama').value = '';
+      document.getElementById('nik').value = '';
+      document.getElementById('tempatLahir').value = '';
+      document.getElementById('tanggalLahir').value = '';
+      document.getElementById('jenisKelamin').value = '';
+      document.getElementById('golonganDarah').value = '';
+      document.getElementById('alamat').value = '';
+      document.getElementById('rt').value = '';
+      document.getElementById('rw').value = '';
+      document.getElementById('desa').value = '';
+      document.getElementById('kecamatan').value = '';
+      document.getElementById('agama').value = '';
+      document.getElementById('status').value = '';
+      document.getElementById('pekerjaan').value = '';
+      document.getElementById('kwn').value = 'WNI';
+      document.getElementById('berlaku').value = 'SEUMUR HIDUP';
+      document.getElementById('kota').value = '';
+      document.getElementById('fotoInput').value = '';
+      document.getElementById('tanggalCetak').value = '';
+      
+      document.getElementById('photoPreview').style.display = 'none';
+      document.getElementById('photoPlaceholderText').style.display = 'block';
+    }
+    
+    function cetakKTP() {
+      // Ambil nilai dari form
+      var nama = document.getElementById("nama").value;
+      var nik = document.getElementById("nik").value;
+      var tempatLahir = document.getElementById("tempatLahir").value;
+      var tanggalLahir = document.getElementById("tanggalLahir").value;
+      var jenisKelamin = document.getElementById("jenisKelamin").value;
+      var golonganDarah = document.getElementById("golonganDarah").value;
+      var alamat = document.getElementById("alamat").value;
+      var rt = document.getElementById("rt").value;
+      var rw = document.getElementById("rw").value;
+      var desa = document.getElementById("desa").value;
+      var kecamatan = document.getElementById("kecamatan").value;
+      var agama = document.getElementById("agama").value;
+      var status = document.getElementById("status").value;
+      var pekerjaan = document.getElementById("pekerjaan").value;
+      var kwn = document.getElementById("kwn").value;
+      var berlaku = document.getElementById("berlaku").value;
+      var kota = document.getElementById("kota").value;
+      var tanggalCetak = document.getElementById("tanggalCetak").value;
+    
+      
+      // Update tampilan KTP
+      document.getElementById("outNama").textContent = nama.toUpperCase();
+      document.getElementById("outNik").textContent = nik;
+      document.getElementById("outTTL").textContent = ${tempatLahir.toUpperCase()}, ${formatDate(tanggalLahir)};
+      document.getElementById("outJK").textContent = jenisKelamin;
+      document.getElementById("outGolDarah").textContent = golonganDarah;
+      document.getElementById("outAlamat").textContent = alamat.toUpperCase();
+      document.getElementById("outRTRW").textContent = ${rt.padStart(3, '0')}/${rw.padStart(3, '0')};
+      document.getElementById("outDesa").textContent = desa.toUpperCase();
+      document.getElementById("outKecamatan").textContent = kecamatan.toUpperCase();
+      document.getElementById("outAgama").textContent = agama;
+      document.getElementById("outStatus").textContent = status;
+      document.getElementById("outPekerjaan").textContent = pekerjaan.toUpperCase();
+      document.getElementById("outKwn").textContent = kwn;
+      document.getElementById("outBerlaku").textContent = berlaku;
+      document.getElementById("outKota").textContent = kota.toUpperCase();
+      document.getElementById("outKotaFooter").textContent = kota.toUpperCase();
+      document.getElementById("outTanggal").textContent = formatDate(tanggalCetak);
+      
+      document.querySelector('.ktp-container').scrollIntoView({ 
+        behavior: 'smooth' 
+      });
+    }
+  </script>
+
+</body>
+</html>
