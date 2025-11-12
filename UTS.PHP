@@ -23,6 +23,11 @@
             text-align: center;
             color: #333;
         }
+        .info{
+            margin-top: 15px;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
         label {
             display: block;
             margin-top: 12px;
@@ -82,10 +87,12 @@
 <body>
 <div class="container">
     <h1>Perhitungan Nilai Akhir Kuliah</h1>
+    <div class="info">
+        <p><strong>Nama:</strong>Kirana Larasati Dewi</p>
+        <p><strong>NIM:</strong> 21051214003 </p>
 
     <?php
     $mahasiswa = array("Kirana Larasati Dewi", "Zahra Ayu Trisna", "Intan Sri Dayanti", "Al Amani Abas");
-
     $komponen = array(
         "kehadiran" => 0.10,
         "tugas" => 0.20,
