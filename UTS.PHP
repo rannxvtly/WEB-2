@@ -90,7 +90,7 @@
     <div class="info">
         <p><strong>Nama:</strong>Kirana Larasati Dewi</p>
         <p><strong>NIM:</strong> 202404009 </p>
-        <p><strong>NIM:</strong> Teknologi Rekayasa Perangkat Lunak </p><br>
+        <p><strong>Prodi:</strong> Teknologi Rekayasa Perangkat Lunak </p><br>
 
     <?php
     $mahasiswa = array("Kirana Larasati Dewi", "Zahra Ayu Trisna", "Intan Sri Dayanti", "Al Amani Abas");
@@ -200,4 +200,5 @@
 </div>
 </body>
 </html>
+
 
