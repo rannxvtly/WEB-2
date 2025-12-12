@@ -21,25 +21,18 @@
         }
         h1, h2 {
             text-align: center;
-            color: #333;
-        }
-        .info{
-            margin-top: 15px;
-            font-size: 14px;
-            margin-bottom: 20px;
         }
         label {
             display: block;
             margin-top: 12px;
             font-weight: bold;
         }
-        select, input[type="number"] {
+        input, select {
             width: 100%;
             padding: 8px;
             margin-top: 5px;
             border-radius: 6px;
             border: 1px solid #ccc;
-            box-sizing: border-box;
         }
         input[type="submit"] {
             margin-top: 20px;
@@ -50,11 +43,6 @@
             font-size: 16px;
             border-radius: 6px;
             cursor: pointer;
-            transition: 0.3s;
-            width: 100%;
-        }
-        input[type="submit"]:hover {
-            background: #218838;
         }
         .hasil {
             margin-top: 30px;
@@ -73,27 +61,38 @@
             text-align: center;
         }
         th {
-            background-color: #28a745;
+            background-color: #66bb6a;
             color: white;
         }
         tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        p {
-            margin-top: 10px;
+            background-color: #f9f9f9;
         }
     </style>
 </head>
 <body>
 <div class="container">
     <h1>Perhitungan Nilai Akhir Kuliah</h1>
-    <div class="info">
-        <p><strong>Nama:</strong>Kirana Larasati Dewi</p>
+    <p><strong>Nama:</strong>Kirana Larasati Dewi</p>
         <p><strong>NIM:</strong> 202404009 </p>
         <p><strong>Prodi:</strong> Teknologi Rekayasa Perangkat Lunak </p><br>
 
     <?php
-    $mahasiswa = array("Kirana Larasati Dewi", "Zahra Ayu Trisna", "Intan Sri Dayanti", "Al Amani Abas");
+    // ===== Ambil list mahasiswa bila dikirim ulang dari hidden input =====
+    if (isset($_POST['list_mhs'])) {
+        $mahasiswa = explode("|", $_POST['list_mhs']);
+    } else {
+        $mahasiswa = array("Kirana Larasati Dewi", "Zahra Ayu Trisna", "Intan Sri Dayanti", "Al Amani Abas");
+    }
+
+    // ===== Tambah mahasiswa baru =====
+    if (isset($_POST['tambah_mhs'])) {
+        $baru = trim($_POST['nama_baru']);
+        if ($baru !== "" && !in_array($baru, $mahasiswa)) {
+            $mahasiswa[] = $baru;
+        }
+    }
+
+    // Komponen penilaian
     $komponen = array(
         "kehadiran" => 0.10,
         "tugas" => 0.20,
@@ -102,6 +101,21 @@
     );
     ?>
 
+    <!-- FORM TAMBAH MAHASISWA -->
+    <h2>Tambah Mahasiswa</h2>
+    <form method="POST">
+        <label>Nama Mahasiswa Baru:</label>
+        <input type="text" name="nama_baru" required>
+
+        <!-- Kirim ulang daftar mahasiswa -->
+        <input type="hidden" name="list_mhs" value="<?php echo implode('|', $mahasiswa); ?>">
+
+        <input type="submit" name="tambah_mhs" value="Tambah">
+    </form>
+
+    <hr><br>
+
+    <!-- FORM HITUNG NILAI -->
     <form method="POST">
         <label>Nama Mahasiswa:</label>
         <select name="nama" required>
@@ -120,18 +134,23 @@
         }
         ?>
 
+        <!-- Kirim ulang daftar mahasiswa ke form -->
+        <input type="hidden" name="list_mhs" value="<?php echo implode('|', $mahasiswa); ?>">
+
         <input type="submit" name="proses" value="Hitung Nilai">
     </form>
 
     <?php
+    // fungsi menghitung nilai akhir
     function hitungNilaiAkhir($nilai, $persentase) {
         $total = 0;
-        foreach ($nilai as $komponen => $angka) {
-            $total += $angka * $persentase[$komponen];
+        foreach ($nilai as $k => $v) {
+            $total += $v * $persentase[$k];
         }
         return $total;
     }
 
+    // fungsi nilai huruf
     function nilaiHuruf($angka) {
         if ($angka >= 90) return "A";
         elseif ($angka >= 80) return "AB";
@@ -142,63 +161,56 @@
         else return "E";
     }
 
+    // Jika tombol proses ditekan
     if (isset($_POST['proses'])) {
         $nama = $_POST['nama'];
-        $kehadiran = $_POST['kehadiran'];
-        $tugas = $_POST['tugas'];
-        $uts = $_POST['uts'];
-        $uas = $_POST['uas'];
-
-        
         $nilai_array = array(
-            "kehadiran" => $kehadiran,
-            "tugas" => $tugas,
-            "uts" => $uts,
-            "uas" => $uas
+            "kehadiran" => $_POST['kehadiran'],
+            "tugas" => $_POST['tugas'],
+            "uts" => $_POST['uts'],
+            "uas" => $_POST['uas']
         );
 
         $nilai_akhir = hitungNilaiAkhir($nilai_array, $komponen);
         $huruf = nilaiHuruf($nilai_akhir);
 
-        switch ($huruf) {
-            case "A": $keterangan = "Sangat Baik"; break;
-            case "AB": $keterangan = "Baik"; break;
-            case "B": $keterangan = "Cukup Baik"; break;
-            case "BC": $keterangan = "Cukup"; break;
-            case "C": $keterangan = "Kurang"; break;
-            case "D": $keterangan = "Sangat Kurang"; break;
-            case "E": $keterangan = "Gagal"; break;
-            default: $keterangan = "Tidak Lulus";
-        }
-
         echo "<div class='hasil'>
-            <h2>Hasil Perhitungan Nilai Akhir</h2>
+            <h2>Hasil Perhitungan Nilai</h2>
+
             <table>
                 <tr>
-                    <th>Nama Mahasiswa</th>
-                    <th>Kehadiran</th>
-                    <th>Tugas</th>
-                    <th>UTS</th>
-                    <th>UAS</th>
-                    <th>Nilai Akhir</th>
-                    <th>Nilai Huruf</th>
-                </tr>
-                <tr>
-                    <td>$nama</td>
-                    <td>$kehadiran</td>
-                    <td>$tugas</td>
-                    <td>$uts</td>
-                    <td>$uas</td>
+                    <th>Komponen</th>
+                    <th>Nilai</th>
+                    <th>Bobot (%)</th>
+                    <th>Kontribusi</th>
+                </tr>";
+
+                foreach ($nilai_array as $k => $v) {
+                    $persen = $komponen[$k] * 100;
+                    $kontribusi = $v * $komponen[$k];
+
+                    echo "<tr>
+                            <td>" . ucfirst($k) . "</td>
+                            <td>$v</td>
+                            <td>$persen%</td>
+                            <td>" . number_format($kontribusi, 2) . "</td>
+                        </tr>";
+                }
+
+        echo "
+                <tr style='background:#f0f0f0; font-weight:bold;'>
+                    <td colspan='3'>Total Nilai Akhir</td>
                     <td>" . number_format($nilai_akhir, 2) . "</td>
+                </tr>
+
+                <tr style='background:#fde2e4; font-weight:bold;'>
+                    <td colspan='3'>Nilai Huruf</td>
                     <td>$huruf</td>
                 </tr>
             </table>
-            <p><strong>Keterangan:</strong> $keterangan</p>
         </div>";
     }
     ?>
 </div>
 </body>
 </html>
-
-
